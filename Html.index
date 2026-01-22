@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Video Downloader - Fast & Free IG Reel & Story Saver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #E1306C; /* Instagram Pink */
+            --secondary-color: #833AB4; /* Instagram Purple */
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        main {
+            padding: 2rem 0;
+        }
+        #hero {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 30px var(--shadow-light);
+            margin-bottom: 3rem;
+        }
+        #hero h2 {
+            font-size: 2.8rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #hero p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .download-form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .download-form input[type="text"] {
+            flex-grow: 1;
+            max-width: 500px;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .download-form input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.2);
+        }
+        .download-form button {
+            background: linear-gradient(45deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .download-form button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-medium);
+        }
+        .download-form button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #result-area {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: #e6ffed; /* Light green for success */
+            color: #1a5e2a; /* Dark green */
+            border: 1px solid #a7e6b0;
+            font-size: 1.1rem;
+            display: none; /* Hidden by default */
+            box-shadow: 0 2px 10px var(--shadow-light);
+        }
+        #result-area.error {
+            background-color: #ffebeb; /* Light red for error */
+            color: #9c2e2e; /* Dark red */
+            border-color: #f7a9a9;
+        }
+        #generatedDownloadLink {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background-color 0.3s ease;
+        }
+        #generatedDownloadLink:hover {
+            background-color: #c72b5f;
+        }
+        #how-it-works, #features {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 30px var(--shadow-light);
+            margin-bottom: 3rem;
+        }
+        #how-it-works h2, #features h2 {
+            font-size: 2.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+        }
+        .steps-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .step-card, .feature-card {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #eee;
+        }
+        .step-card:hover, .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .step-card .icon, .feature-card .icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-card h3, .feature-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        .step-card p, .feature-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+        footer {
+            background-color: #222;
+            color: #aaa;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            #hero h2 {
+                font-size: 2rem;
+            }
+            #hero p {
+                font-size: 1rem;
+            }
+            .download-form input[type="text"],
+            .download-form button {
+                width: 100%;
+                max-width: 100%;
+            }
+            .download-form button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            #how-it-works h2, #features h2 {
+                font-size: 1.8rem;
+            }
+            .steps-grid, .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .step-card, .feature-card {
+                padding: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem 0;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            #hero, #how-it-works, #features {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            #hero h2 {
+                font-size: 1.7rem;
+            }
+            #hero p {
+                font-size: 0.9rem;
+            }
+            .download-form {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            .download-form button {
+                font-size: 0.9rem;
+            }
+            #result-area {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            #generatedDownloadLink {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            #how-it-works h2, #features h2 {
+                font-size: 1.5rem;
+            }
+            .step-card .icon, .feature-card .icon {
+                font-size: 2.8rem;
+            }
+            .step-card h3, .feature-card h3 {
+                font-size: 1.3rem;
+            }
+            .step-card p, .feature-card p {
+                font-size: 0.9rem;
+            }
+            footer {
+                padding: 1.5rem 0;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fab fa-instagram"></i> Instagram Downloader</h1>
+    </header>
+
+    <main class="container">
+        <section id="hero">
+            <h2>Download Instagram Videos, Reels, and Stories Instantly!</h2>
+            <p>Paste the Instagram URL below and click "Download" to save your favorite content in high quality.</p>
+            <div class="download-form">
+                <input type="text" id="videoUrl" placeholder="Paste Instagram Video/Reel/Story URL here...">
+                <button id="downloadButton">
+                    <span id="buttonText">Download</span>
+                    <div id="loadingSpinner" class="spinner"></div>
+                </button>
+            </div>
+            <div id="result-area" class="hidden">
+                <p id="downloadMessage"></p>
+                <a id="generatedDownloadLink" href="#" target="_blank" download>Download Video</a>
+                <p id="errorMessage" class="text-red-600 mt-2"></p>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2>How to Download Instagram Videos</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <i class="fas fa-copy icon"></i>
+                    <h3>1. Copy URL</h3>
+                    <p>Find the Instagram video, reel, or story you want to download and copy its link.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fas fa-paste icon"></i>
+                    <h3>2. Paste URL</h3>
+                    <p>Paste the copied URL into the input box above and our tool will process it.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fas fa-download icon"></i>
+                    <h3>3. Click Download</h3>
+                    <p>Hit the download button and your video will be saved directly to your device.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2>Why Use Our Instagram Downloader?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-tachometer-alt icon"></i>
+                    <h3>Fast & Efficient</h3>
+                    <p>Quickly download any Instagram content without delays. Our servers ensure high speed.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt icon"></i>
+                    <h3>Safe & Secure</h3>
+                    <p>Your privacy is our priority. No registration required, no personal data collected.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-infinity icon"></i>
+                    <h3>Unlimited Downloads</h3>
+                    <p>Download as many videos, reels, and stories as you want, completely free.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-hd icon"></i>
+                    <h3>High-Quality Output</h3>
+                    <p>Save videos in their original high quality, preserving every detail of the content.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Instagram Downloader. All rights reserved.</p>
+        <p>
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoUrlInput = document.getElementById('videoUrl');
+            const downloadButton = document.getElementById('downloadButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const resultArea = document.getElementById('result-area');
+            const downloadMessage = document.getElementById('downloadMessage');
+            const generatedDownloadLink = document.getElementById('generatedDownloadLink');
+            const errorMessage = document.getElementById('errorMessage');
+
+            function clearFeedback() {
+                resultArea.classList.add('hidden');
+                resultArea.classList.remove('error');
+                downloadMessage.textContent = '';
+                generatedDownloadLink.href = '#';
+                generatedDownloadLink.classList.add('hidden');
+                errorMessage.textContent = '';
+            }
+
+            function showLoading(isLoading) {
+                downloadButton.disabled = isLoading;
+                if (isLoading) {
+                    buttonText.textContent = 'Processing...';
+                    loadingSpinner.style.display = 'inline-block';
+                    resultArea.classList.remove('hidden');
+                    downloadMessage.textContent = 'Fetching video data. Please wait...';
+                    resultArea.classList.remove('error');
+                    generatedDownloadLink.classList.add('hidden');
+                } else {
+                    buttonText.textContent = 'Download';
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+
+            function isValidInstagramUrl(url) {
+                // Basic regex for Instagram post/reel/tv URLs
+                const instagramRegex = /^(https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\/[a-zA-Z0-9_-]+\/?.*)$/;
+                // Also allow stories, though they often have different patterns, this is a general catch
+                const storyRegex = /^(https?:\/\/(www\.)?instagram\.com\/stories\/[a-zA-Z0-9._-]+\/[0-9]+\/?.*)$/;
+                return instagramRegex.test(url) || storyRegex.test(url);
+            }
+
+            downloadButton.addEventListener('click', async () => {
+                clearFeedback();
+                const url = videoUrlInput.value.trim();
+
+                if (!url) {
+                    resultArea.classList.remove('hidden');
+                    resultArea.classList.add('error');
+                    errorMessage.textContent = 'Please enter an Instagram URL.';
+                    return;
+                }
+
+                if (!isValidInstagramUrl(url)) {
+                    resultArea.classList.remove('hidden');
+                    resultArea.classList.add('error');
+                    errorMessage.textContent = 'Please enter a valid Instagram video, reel, or story URL.';
+                    return;
+                }
+
+                showLoading(true);
+
+                try {
+                    // Simulate API call delay
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+
+                    // Simulate a successful response
+                    const dummyDownloadUrl = 'https://example.com/dummy-instagram-video.mp4'; // Replace with actual backend endpoint
+                    const filename = `instagram_video_${Date.now()}.mp4`;
+
+                    downloadMessage.textContent = 'Video processed successfully!';
+                    generatedDownloadLink.href = dummyDownloadUrl;
+                    generatedDownloadLink.download = filename; // Suggests a filename
+                    generatedDownloadLink.classList.remove('hidden');
+                    resultArea.classList.remove('error'); // Ensure no error styling
+                    resultArea.classList.remove('hidden');
+
+                    videoUrlInput.value = ''; // Clear input after successful processing
+
+                } catch (error) {
+                    console.error('Download error:', error);
+                    resultArea.classList.add('error');
+                    errorMessage.textContent = 'An error occurred while fetching the video. Please try again.';
+                    resultArea.classList.remove('hidden');
+                } finally {
+                    showLoading(false);
+                }
+            });
+
+            // Allow pressing Enter key to trigger download
+            videoUrlInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default form submission if any
+                    downloadButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
