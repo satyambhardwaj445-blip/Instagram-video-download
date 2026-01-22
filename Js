@@ -1,0 +1,104 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const urlInput = document.getElementById('urlInput');
+    const downloadButton = document.getElementById('downloadButton');
+    const messageArea = document.getElementById('messageArea');
+    const downloadResult = document.getElementById('downloadResult');
+
+    /**
+     * Displays a message in the messageArea with a specific type for styling.
+     * @param {string} message - The message to display.
+     * @param {'info'|'success'|'error'} type - The type of message for styling.
+     */
+    function displayMessage(message, type) {
+        messageArea.textContent = message;
+        messageArea.className = ''; // Clear existing classes
+        messageArea.classList.add('message-area', type);
+        messageArea.style.display = 'block';
+    }
+
+    /**
+     * Clears all feedback messages and download results.
+     */
+    function clearFeedback() {
+        messageArea.textContent = '';
+        messageArea.style.display = 'none';
+        downloadResult.innerHTML = '';
+        downloadResult.style.display = 'none';
+    }
+
+    /**
+     * Performs a basic client-side validation to check if the URL is from instagram.com.
+     * Note: Robust validation should always be server-side.
+     * @param {string} url - The URL to validate.
+     * @returns {boolean} - True if the URL appears to be a valid Instagram URL, false otherwise.
+     */
+    function isValidInstagramUrl(url) {
+        const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/(p|reel|tv|stories)\/[a-zA-Z0-9_-]+(\/|\?.*)?$/;
+        return instagramRegex.test(url);
+    }
+
+    if (!urlInput || !downloadButton || !messageArea || !downloadResult) {
+        console.error('One or more required DOM elements not found.');
+        return; // Exit if essential elements are missing
+    }
+
+    downloadButton.addEventListener('click', async () => {
+        clearFeedback();
+        const instagramUrl = urlInput.value.trim();
+
+        if (!instagramUrl) {
+            displayMessage('Please enter an Instagram URL.', 'error');
+            return;
+        }
+
+        if (!isValidInstagramUrl(instagramUrl)) {
+            displayMessage('Please enter a valid Instagram video, reel, or story URL.', 'error');
+            return;
+        }
+
+        downloadButton.disabled = true;
+        downloadButton.textContent = 'Processing...';
+        displayMessage('Fetching video information...', 'info');
+
+        try {
+            // Simulate an asynchronous operation (e.g., API call to backend)
+            // In a real application, you would make a fetch() request here.
+            await new Promise(resolve => setTimeout(resolve, 2500)); // Simulate 2.5 seconds delay
+
+            // Simulated backend response for video data
+            const simulatedVideoData = {
+                id: '12345',
+                title: 'Cute Cat Playing with Yarn - Instagram Reel',
+                thumbnail: 'https://via.placeholder.com/300x200?text=Video+Thumbnail', // Placeholder image
+                downloadUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' // Public domain video for demonstration
+            };
+
+            // Display simulated video info and download link
+            downloadResult.innerHTML = `
+                ${simulatedVideoData.title}
+                
+                
+                    Download Video
+                
+            `;
+            downloadResult.style.display = 'block';
+            displayMessage('Video information retrieved successfully!', 'success');
+            urlInput.value = ''; // Clear input after successful processing
+
+        } catch (error) {
+            console.error('Error during video processing:', error);
+            displayMessage('An error occurred while processing your request. Please try again.', 'error');
+        } finally {
+            downloadButton.disabled = false;
+            downloadButton.textContent = 'Download';
+        }
+    });
+
+    // Optional: Trigger download on Enter key press in the input field
+    urlInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission
+            downloadButton.click();
+        }
+    });
+});
