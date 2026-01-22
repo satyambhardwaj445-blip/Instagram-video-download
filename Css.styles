@@ -1,0 +1,365 @@
+:root {
+    --primary-color: #663399; /* Deep Purple */
+    --background-color: #1a1a1a; /* Dark background */
+    --surface-color: #2a2a2a; /* Slightly lighter for cards */
+    --text-color: #e0e0e0; /* Light gray text */
+    --text-secondary-color: #a0a0a0; /* Muted text */
+    --border-color: #3a3a3a; /* Subtle border */
+    --font-family-sans: 'Inter', sans-serif;
+    --font-family-mono: 'Fira Code', monospace;
+    --font-size-base: 16px;
+    --spacing-unit: 1rem;
+    --border-radius-base: 8px;
+    --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Global Resets & Base Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #8c66c4; /* Lighter purple on hover */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-sans);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-unit);
+}
+
+h1 { font-size: 2.8rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.8rem; }
+p { font-size: 1rem; margin-bottom: 0.8rem; }
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-unit);
+}
+
+header {
+    background-color: var(--surface-color);
+    padding: var(--spacing-unit) 0;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+main {
+    flex-grow: 1;
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-section {
+    background-color: var(--surface-color);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius-base);
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-medium);
+    max-width: 800px;
+    width: 100%;
+    border: 1px solid var(--border-color);
+}
+
+.hero-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    color: var(--text-secondary-color);
+    margin-bottom: 2rem;
+}
+
+/* Input Form */
+.download-form {
+    display: flex;
+    gap: var(--spacing-unit);
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.url-input {
+    flex-grow: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    background-color: #3a3a3a;
+    color: var(--text-color);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.url-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.5);
+}
+
+.download-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius-base);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-light);
+}
+
+.download-button:hover {
+    background-color: #8c66c4;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.download-button:disabled {
+    background-color: #5a4b6b;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 0.8s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#result-area {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    border-radius: var(--border-radius-base);
+    font-size: 1rem;
+    display: none;
+    background-color: #3a3a3a;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    width: 100%;
+    max-width: 600px;
+}
+
+#result-area.info {
+    color: #b3e0ff;
+    background-color: #2b3a4a;
+    border-color: #4a6a8a;
+}
+#result-area.success {
+    color: #c3e88d;
+    background-color: #2a3a2b;
+    border-color: #4a8a4b;
+}
+#result-area.error {
+    color: #ff9999;
+    background-color: #4a2a2a;
+    border-color: #8a4a4a;
+}
+
+#generatedDownloadLink {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #5cb85c; /* Green for download */
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius-base);
+    transition: background-color 0.3s ease;
+}
+
+#generatedDownloadLink:hover {
+    background-color: #4cae4c;
+}
+
+/* Instructions / How-To Section */
+.instructions-section {
+    background-color: var(--surface-color);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius-base);
+    margin-top: 3rem;
+    text-align: center;
+    box-shadow: var(--shadow-medium);
+    width: 100%;
+    max-width: 1200px;
+    border: 1px solid var(--border-color);
+}
+
+.instructions-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.step-card {
+    background-color: #3a3a3a;
+    padding: 2rem;
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--border-color);
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.step-card .step-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    background: -webkit-linear-gradient(45deg, var(--primary-color), #a05bdc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.step-card h3 {
+    font-size: 1.4rem;
+    color: var(--text-color);
+    margin-bottom: 0.8rem;
+}
+
+.step-card p {
+    color: var(--text-secondary-color);
+    font-size: 0.95rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--surface-color);
+    color: var(--text-secondary-color);
+    padding: 1.5rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: auto; /* Pushes footer to bottom */
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
+
+footer a {
+    color: var(--primary-color);
+    margin: 0 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.5rem; }
+    p { font-size: 0.9rem; }
+
+    .hero-section {
+        padding: 2.5rem 1.5rem;
+    }
+    .download-form {
+        flex-direction: column;
+    }
+    .download-button {
+        width: 100%;
+    }
+    .instructions-section {
+        padding: 2.5rem 1.5rem;
+    }
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+    .step-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1.3rem; }
+    p { font-size: 0.85rem; }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    .instructions-section {
+        padding: 2rem 1rem;
+    }
+    .step-card .step-number {
+        font-size: 2rem;
+    }
+    footer {
+        padding: 1rem 0;
+        font-size: 0.8rem;
+    }
+}
